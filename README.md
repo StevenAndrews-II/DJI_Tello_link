@@ -67,7 +67,14 @@ s_down = False
 a_down = False
 d_down = False
 
+# conection tracking
+last_connection_state = False
+
 def APP():
+    # display connection state
+    if last_connection_state != TL.connection_data.connection_state:
+        print(f"Drone connection state: {TL.connection_data.connection_state}")
+        last_connection_state = TL.connection_data.connection_state
 
     # single action commands 
     if keyboard.is_pressed("t"):
