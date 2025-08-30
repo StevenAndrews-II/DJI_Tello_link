@@ -51,7 +51,7 @@ time.sleep(4)                               # must wait for take off
 
 for i in range(0, forward_duration / stream_sleep ):
     TL.uplink( [0,50,0,0] , True )          # to stream data you must put True as a second parameter.            
-    time.sleep( stream_sleep_time )
+    time.sleep( stream_sleep )
 TL.uplink("land")
 
 # Get telemetry
