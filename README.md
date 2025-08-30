@@ -136,7 +136,7 @@ def APP():
 
 while not EXIT: # main loop, fps locked to 60 
      tick                =  time.time()        # get time 
-     delta               =  tick - last_tick   # update delta 
+     delta               =  tick - last_tick   # get delta 
      last_tick           =  tick               # update last tick 
 
      deta_time           += delta              # update delta time 
