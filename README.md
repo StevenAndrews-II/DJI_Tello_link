@@ -118,11 +118,10 @@ while not EXIT: # main loop, fps locked to 60
 - `__telem_buffer()` → parses telemetry into structured dict  
 
 ### Utility (Frontend)  
-- `uplink(DATA, hold_ping: bool)` → sends commands/data uplink  
+- `uplink(DATA)` → sends commands/data uplink  
 - `disconnect()` → disconnect from drone  
 - `connect()` → reconnect to drone  
 - `get_telem(search_id)` → get telemetry value by key
-- `uplink(DATA)` → send data uplink to drone
 
 ### Clock / state machine
 - `connection_()` → connection state machine (handles pings, reconnects)  
