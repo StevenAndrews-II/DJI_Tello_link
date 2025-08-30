@@ -96,4 +96,4 @@ agx, agy, agz
 
 - Author: **Steven Andrews II**  
 - Project Type: Experimental / Alternative SDK  
-- License: MIT (consider adding LICENSE file)  
+- License: MIT 
