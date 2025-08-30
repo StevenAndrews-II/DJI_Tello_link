@@ -135,7 +135,7 @@ while not EXIT: # main loop, fps locked to 60
      deta_time           += delta              # update delta time 
 
     if delta_time >= FPS_INTERVAL:             
-       TL.connection()                         # keeps the drone in SDK mode 
+       TL.connection()                         # keeps the drone in SDK mode & tracks connection state
        APP()
        delta_time        -= FPS_INTERVAL
      
