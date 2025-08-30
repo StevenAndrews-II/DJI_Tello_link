@@ -85,7 +85,7 @@ def APP():
        print("sending land command")
        TL.uplink("land")
 
-    # keyboard interface 
+    # keyboard motion interface 
     if keyboard.is_pressed("w"):
        w_down     = True
        dead_stick = False
