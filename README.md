@@ -1,7 +1,7 @@
 # 🚁 TelloLink – Alternative DJI Tello Communication Layer  
 
 A Python communications API by **Steven Andrews II** providing a flexible **UDP-based communication layer** for the DJI Tello drone.  
-This project was built as an **alternative to the official SDK client**, offering threading support, telemetry parsing, and connection management.  
+This project was built as an **alternative to the official SDK client**, offering threading support, telemetry parsing, and connection management for realtime control.  
 
 ---
 
