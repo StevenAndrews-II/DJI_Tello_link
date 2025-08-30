@@ -3,40 +3,11 @@ import socket
 import threading
 from   threading import Thread
 
-class TelloLink():
-    """
-    // ----------------------------------------------------------------------------------------------------------------------------
-    This module provides an alternative communications layer for the DJI Tello drone
-    -------------------------------------------------------------------------------------------------------------------------------
-    Back End:
-    
-        downlink_com(port)                 Thread: Handles downlink data transmissions from the drone (OK responses + errors).
-        downlink_telemetry(port)           Thread: Receives telemetry data from the drone.
-        uplink(DATA, hold_ping: bool)      Sends data uplink to the drone.
-                                            - When streaming from the ground station, the ping must be held to maintain mode and connection.
-                                            - Otherwise, ping takes priority over data streaming.
-        connection_()                      Connection state machine (external rate limiting recommended).
-        telem_buffer()                     Buffers telemetry data from the socket (external rate limiting recommended).
-    
-    Utility (Front End):
-    
-        uplink(DATA, hold_ping: bool)      Sends data uplink to the drone.
-                                            - Usually, you want hold_ping enabled while sending/streaming.
-                                            - DATA should be a "command" (see DJI Tello protocol documentation).
-        disconnect()                       Disconnect toggle.
-        connect()                          Connect toggle (enabled by default at runtime).
-        get_telem(search_id)               Retrieve a telemetry state from the buffer.
-    
-    -------------------------------------------------------------------------------------------------------------------------------
-    Written by:      Steven Andrews II
-    // ----------------------------------------------------------------------------------------------------------------------------
-    """
-
-
+class TombStone(object):
 
 
     '''Buffer:     Telemetry parsing buffer  : TELEMETRY__ -> defaults to empty if not reciving   '''
-    def telem_buffer(self):
+    def __telem_buffer(self):
         self.TELEMETRY__    =   {} 
         for _ in  self.telemetry_keys:
             for i in self.raw_telemetry :
@@ -44,32 +15,23 @@ class TelloLink():
                 key_        =   k_[0]
                 if key_ == _ :       
                     self.TELEMETRY__[key_] = k_[1]   
-            
+                   
 
-
-    '''Utility:    Get telemetry from the buffer    '''
-    def get_telem(self,search):  
-         for k,v in self.TELEMETRY__.items():
-             if k == search:
-                 return v                           
-         return False           
-        
-   
    
     '''Socket:      UDP Respons Receive Thread   ( receives responses from commands )   '''
-    def downlink_com(self_,port):
+    def __downlink_com(self_,port):
         while True:
             if self_.connection_data["connection_toggle"] == True and self_.downlink_hold == False:
                 try: 
                         DATA    ,  ADDRESS      = self_.client_socket.recvfrom(   port   ) 
                         self_.incoming          = True
                 except socket.error as error_ :
-                    print("Error: in downlink_com")                                        
+                    print("Error: in __downlink_com")                                        
 
 
 
     '''Socket:      Receives telemetry information from the drone      '''
-    def downlink_telemetry(self_,port):
+    def __downlink_telemetry(self_,port):
         while True:
             if self_.connection_data["connection_toggle"] == True and self_.downlink_hold == False :
                 try:
@@ -80,14 +42,14 @@ class TelloLink():
                            self_.incoming       =  True
                            self_.hold           =  False
                 except socket.error as error_ :
-                        print("Error: downlink_telemetry") 
+                        print("Error: __downlink_telemetry") 
                
 
 
     '''Socket:      Outgoing packet handler    '''
-    def uplink(self,DATA,*arg):
+    def uplink(self,DATA,hold = True):
         if  self.connection_data["connection_toggle"] == True:
-            self.hold             = False or bool(  arg  )   #  ping command hold 
+            self.hold             = hold
             try:
                PACKET             = str.encode(   DATA   )
                self.client_socket.sendto(  PACKET , self.DRONE_address  )  
@@ -108,7 +70,7 @@ class TelloLink():
             return  True
         
         
-     '''Utility:      Quick toggle comunications on  ( default is on ) '''
+    '''Utility:      Quick toggle comunications on  ( default is on ) '''
     def connect(self):
         if  self.connection_data["connection_toggle"]           != True:
             self.connection_data["connection_toggle"]           = True
@@ -117,9 +79,19 @@ class TelloLink():
             return  True
 
 
+
+    '''Utility:    Get telemetry from the buffer    '''
+    def get_telem(self,search):  
+         for k,v in self.TELEMETRY__.items():
+             if k == search:
+                 return v                           
+         return False    
+
+
     '''Handler:      Establish Connection and track state    '''
-    def connection_(self):      
-       if  self.connection_data["connection_toggle"]  == True:      
+    def connection(self):      
+       if  self.connection_data["connection_toggle"]  == True: 
+           self.__telem_buffer()
            self.connection_data["ping_clk"]                                 =  self.connection_data["ping_clk"]    +   1
            #     disconnection detection 
            if self.connection_data["connection_state"] == True and self.connection_data["conCheck_index"] > self.connection_data["conCheck_Mindex"]:
@@ -148,7 +120,7 @@ class TelloLink():
                   # Hold: holds the command uplink if streaming data ( telemetry downlink keeps the connection state open )
                   if self.hold  != True:
                         print       (   "Ping..."   ) 
-                        self.uplink (   "command"   )
+                        self.uplink (   "command" , False  )
 
                   self.connection_data["conCheck_index"]                    = self.connection_data["conCheck_index"]   +  1
                   self.connection_data["connection_sub_state"]              = True    
@@ -231,11 +203,11 @@ class TelloLink():
         self.threads_init                     = False
         if not self.threads_init:
             # command responsed thread
-            self.receive_thread                      = threading.Thread( target = TombStone.downlink_com         , args = (  self,   self.UPLINK_PORT) )
+            self.receive_thread                      = threading.Thread( target = TombStone.__downlink_com         , args = (  self,   self.UPLINK_PORT) )
             self.receive_thread.daemon               = True                                                               # force thred to run in parallel 
             self.receive_thread.start()
             # status responsed thread
-            self.status_thread                       = threading.Thread( target = TombStone.downlink_telemetry   , args = (  self,   self.UPLINK_PORT) )
+            self.status_thread                       = threading.Thread( target = TombStone.__downlink_telemetry   , args = (  self,   self.UPLINK_PORT) )
             self.status_thread.daemon                = True                                                               # force thred to run in parallel 
             self.status_thread.start()
             # <>>> end stop
