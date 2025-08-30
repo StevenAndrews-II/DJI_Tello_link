@@ -166,7 +166,7 @@ while not EXIT: # main loop, fps locked to 60
 - `get_telem(search_id)` → get telemetry value by key
 
 ### Clock / state machine
-- `connection_()` → connection state machine (handles pings, reconnects)  
+- `connection()` → connection state machine (handles pings, reconnects)  
 
 ---
 
