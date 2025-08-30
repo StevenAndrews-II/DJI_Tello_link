@@ -95,10 +95,10 @@ def APP():
     else:
        a_down     = False
     if keyboard.is_pressed("d"):
-       d_down = True
+       d_down     = True
        dead_stick = False
     else:
-       d_down = False
+       d_down     = False
 
     # reset buffer to 0 when no buttons are down 
     if not w_down and not s_down:
