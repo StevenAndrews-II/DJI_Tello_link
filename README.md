@@ -50,7 +50,7 @@ EXIT                     = False
 FPS_LOCK                 = 60
 FPS_INTERVAL             = 1 / FPS_LOCK
 delta_time               = 0
-L_tick                   = time.time()
+last_tick                   = time.time()
 
 # keyboard control
 t_toggle                 = False
@@ -65,8 +65,11 @@ def APP():
 
     # button press check - simple
     if keyboard.is_pressed("t"):
-       TL.uplink("takeoff")
+       print("sending take off command")
+       TL.uplink("takeoff")        # see drone documentation for commands 
+
     if keyboard.is_pressed("l"):
+       print("sending land command")
        TL.uplink("land")
 
     # direction control
@@ -90,14 +93,14 @@ def APP():
        
 
 while not EXIT: # main loop, fps locked to 60 
-     tick                =  time.time()
-     delta               =  tick - L_tick
-     L_tick              =  tick
+     tick                =  time.time()        # get time 
+     delta               =  tick - last_tick   # update delta 
+     last_tick           =  tick               # update last tick 
 
-     deta_time           += delta
+     deta_time           += delta              # update delta time 
 
-    if delta_time >= FPS_INTERVAL:
-       TL.connection()
+    if delta_time >= FPS_INTERVAL:             
+       TL.connection()                         # keeps the drone in SDK mode 
        APP()
        delta_time        -= FPS_INTERVAL
      
