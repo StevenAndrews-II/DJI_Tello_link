@@ -121,10 +121,10 @@ def APP():
        if not dead_stick:
            TL.uplink(direction_buffer)
     else:
-        if not dead_stick:
-            for i in range(dead_stick_padding)
+       if not dead_stick:
+           for i in range(dead_stick_padding)
                 TL.uplink(direction_buffer)
-            dead_stick = True
+           dead_stick = True
        
 
 while not EXIT: # main loop, fps locked to 60 
