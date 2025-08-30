@@ -47,7 +47,7 @@ forward_duration        = 2                 # time to move forward
 
 
 TL.uplink("takeoff",True)                        # lifts off the DJItello drone - see drone documentation 
-time.sleep(4)                               # must wait for take off 
+time.sleep(4)                                    # must wait for take off 
 
 for i in range(0, forward_duration / stream_sleep ):
     TL.uplink( [0,50,0,0] , True )          # to stream data / bypass SDK keepalive must set to (True)          
