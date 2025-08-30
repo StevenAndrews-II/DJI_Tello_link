@@ -116,14 +116,15 @@ def APP():
     if d_down = True:
        direction_buffer[1] =  50
 
-
     # Buffered uplink for motion control  
-    if direction_buffer != [0,0,0,0] and not dead_stick :
-       TL.uplink(direction_buffer)
+    if direction_buffer != [0,0,0,0] :
+       if not dead_stick:
+           TL.uplink(direction_buffer)
     else:
-        for i in range(dead_stick_padding)
-            TL.uplink(direction_buffer)
-        dead_stick = True
+        if not dead_stick:
+            for i in range(dead_stick_padding)
+                TL.uplink(direction_buffer)
+            dead_stick = True
        
 
 while not EXIT: # main loop, fps locked to 60 
