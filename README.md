@@ -38,25 +38,70 @@ cd DJI_Tello_link
 ## 📖 Usage Example  
 
 ```python
-from tello_link import TelloLink
+from TelloLink import TelloLink
 import time
+import keyboard
 
-TL                      = TelloLink()       # Initialize link
-stream_sleep            = 0.1               # streaming cycle rate  -  to test forward motion 
-forward_duration        = 2                 # time to move forward
+TL                       = TelloLink()       # Initialize link
+
+# FPS clock
+
+EXIT                     = False
+FPS_LOCK                 = 60
+FPS_INTERVAL             = 1 / FPS_LOCK
+delta_time               = 0
+L_tick                   = time.time()
+
+# keyboard control
+t_toggle                 = False
+direction_buffer         = [0,0,0,0]
+
+# flight state tracking:
+in_air                   = False
+dead_stick               = True    # stick return to center, reduce link overhead 
+dead_stick_padding       = 2
+
+def APP():
+
+    # button press check - simple
+    if keyboard.is_pressed("t"):
+       TL.uplink("takeoff")
+    if keyboard.is_pressed("l"):
+       TL.uplink("land")
+
+    # direction control
+    if keyboard.is_pressed("w"):
+       direction_buffer[0] =  50     # half power for test
+    if keyboard.is_pressed("s"):
+       direction_buffer[0] = -50
+    if keyboard.is_pressed("a"):    
+       direction_buffer[1] = -50
+    if keyboard.is_pressed("d"):
+       direction_buffer[1] = -50
 
 
-TL.uplink("takeoff",True)                   # lifts off the DJItello drone - see drone documentation 
-time.sleep(4)                               # must wait for take off 
+    # Buffered uplink for motion control  
+    if direction_buffer != [0,0,0,0] and not dead_stick :
+       TL.uplink(direction_buffer)
+    else:
+        for i in range(dead_stick_padding)
+            TL.uplink(direction_buffer)
+        dead_stick = True
+       
 
-for i in range(0, forward_duration / stream_sleep ):
-    TL.uplink( [0,50,0,0] , True )          # to stream data / bypass SDK keepalive must set to (True)          
-    time.sleep( stream_sleep )
-TL.uplink("land",True)
+while not EXIT: # main loop, fps locked to 60 
+     tick                =  time.time()
+     delta               =  tick - L_tick
+     L_tick              =  tick
 
-# Get telemetry
-battery = TL.get_telem("bat")
-print("Battery level:", battery)
+     deta_time           += delta
+
+    if delta_time >= FPS_INTERVAL:
+       TL.connection()
+       APP()
+       delta_time        -= FPS_INTERVAL
+     
+
 ```
 
 ---
