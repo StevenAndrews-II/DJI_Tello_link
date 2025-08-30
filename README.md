@@ -50,7 +50,7 @@ EXIT                     = False
 FPS_LOCK                 = 60
 FPS_INTERVAL             = 1 / FPS_LOCK
 delta_time               = 0
-last_tick                   = time.time()
+last_tick                = time.time()
 
 # keyboard control
 t_toggle                 = False
