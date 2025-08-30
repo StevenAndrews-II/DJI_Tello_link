@@ -46,13 +46,13 @@ stream_sleep            = 0.1               # streaming cycle rate  -  to test f
 forward_duration        = 2                 # time to move forward
 
 
-TL.uplink("takeoff")                        # lifts off the DJItello drone - see drone documentation 
+TL.uplink("takeoff",True)                        # lifts off the DJItello drone - see drone documentation 
 time.sleep(4)                               # must wait for take off 
 
 for i in range(0, forward_duration / stream_sleep ):
-    TL.uplink( [0,50,0,0] , True )          # to stream data you must put True as a second parameter.            
+    TL.uplink( [0,50,0,0] , True )          # to stream data / bypass SDK keepalive must set to (True)          
     time.sleep( stream_sleep )
-TL.uplink("land")
+TL.uplink("land",True)
 
 # Get telemetry
 battery = TL.get_telem("bat")
