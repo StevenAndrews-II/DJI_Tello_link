@@ -41,24 +41,26 @@ cd DJI_Tello_link
 from tello_link import TelloLink
 import time
 
-# Initialize link
-tello = TelloLink()
+TL                      = TelloLink()       # Initialize link
+stream_sleep            = 0.1               # streaming cycle rate  -  to test forward motion 
+forward_duration        = 2                 # time to move forward
 
-# Send a simple command
-tello.uplink("command")  # put drone in SDK mode
-time.sleep(1)
 
-tello.uplink("takeoff")
-time.sleep(5)
+TL.uplink("takeoff")                        # lifts off the DJItello drone - see drone documentation 
+time.sleep(4)                               # must wait for take off 
 
-tello.uplink("land")
+for i in range(0, forward_duration / stream_sleep ):
+    TL.uplink( [0,50,0,0] , True )          # to stream data you must put True as a second parameter.            
+    time.sleep( stream_sleep_time )
+TL.uplink("land")
 
 # Get telemetry
-battery = tello.get_telem("bat")
+battery = TL.get_telem("bat")
 print("Battery level:", battery)
 ```
 
 ---
+
 
 ## 📚 API Reference  
 
