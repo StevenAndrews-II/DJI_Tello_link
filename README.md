@@ -113,17 +113,19 @@ while not EXIT: # main loop, fps locked to 60
 ## 📚 API Reference  
 
 ### Backend  
-- `downlink_com(port)` → Thread: receives responses from drone commands  
-- `downlink_telemetry(port)` → Thread: receives telemetry packets  
-- `uplink(DATA, hold_ping: bool)` → send data uplink to drone  
-- `connection_()` → connection state machine (handles pings, reconnects)  
-- `telem_buffer()` → parses telemetry into structured dict  
+- `__downlink_com(port)` → Thread: receives responses from drone commands  
+- `__downlink_telemetry(port)` → Thread: receives telemetry packets  
+- `__telem_buffer()` → parses telemetry into structured dict  
 
 ### Utility (Frontend)  
 - `uplink(DATA, hold_ping: bool)` → sends commands/data uplink  
 - `disconnect()` → disconnect from drone  
 - `connect()` → reconnect to drone  
-- `get_telem(search_id)` → get telemetry value by key  
+- `get_telem(search_id)` → get telemetry value by key
+- `uplink(DATA)` → send data uplink to drone
+
+### Clock / state machine
+- `connection_()` → connection state machine (handles pings, reconnects)  
 
 ---
 
