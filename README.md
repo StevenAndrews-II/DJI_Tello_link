@@ -61,9 +61,15 @@ in_air                   = False
 dead_stick               = True    # stick return to center, reduce link overhead 
 dead_stick_padding       = 2
 
+# keys
+w_down = False
+s_down = False
+a_down = False
+d_down = False
+
 def APP():
 
-    # button press check - simple
+    # single action commands 
     if keyboard.is_pressed("t"):
        print("sending take off command")
        TL.uplink("takeoff")        # see drone documentation for commands 
@@ -72,15 +78,43 @@ def APP():
        print("sending land command")
        TL.uplink("land")
 
-    # direction control
+    # keyboard interface 
     if keyboard.is_pressed("w"):
-       direction_buffer[0] =  50     # half power for test
+       w_down     = True
+       dead_stick = False
+    else:
+       w_down     = False
     if keyboard.is_pressed("s"):
-       direction_buffer[0] = -50
+       s_down     = True
+       dead_stick = False
+    else:
+       s_down     = False
     if keyboard.is_pressed("a"):    
-       direction_buffer[1] = -50
+       a_down     = True
+       dead_stick = False
+    else:
+       a_down     = False
     if keyboard.is_pressed("d"):
+       d_down = True
+       dead_stick = False
+    else:
+       d_down = False
+
+    # reset buffer to 0 when no buttons are down 
+    if not w_down and not s_down:
+        direction_buffer[0] = 0
+    if not a_down and not d_down:
+        direction_buffer[1] = 0
+
+    # apply motion
+    if w_down = True:
+       direction_buffer[0] =  50
+    if s_down = True:
+       direction_buffer[0] = -50
+    if a_down = True:
        direction_buffer[1] = -50
+    if d_down = True:
+       direction_buffer[1] =  50
 
 
     # Buffered uplink for motion control  
