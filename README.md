@@ -86,7 +86,7 @@ def APP():
         print("sending land command")
         TL.uplink("land")
 
-    # keyboard motion interface
+    # keyboard flight control
     w_down = keyboard.is_pressed("w")
     s_down = keyboard.is_pressed("s")
     a_down = keyboard.is_pressed("a")
