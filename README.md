@@ -54,7 +54,6 @@ last_tick            = time.time()
 direction_buffer     = [0, 0, 0, 0]
 
 # flight state tracking
-in_air               = False
 dead_stick           = True
 dead_stick_padding   = 2
 
