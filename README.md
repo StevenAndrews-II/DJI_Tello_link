@@ -95,13 +95,13 @@ def APP():
 
     # apply motion
     if w_down:
-        direction_buffer[0] = 50
+        direction_buffer[0] =  50
     if s_down:
         direction_buffer[0] = -50
     if a_down:
         direction_buffer[1] = -50
     if d_down:
-        direction_buffer[1] = 50
+        direction_buffer[1] =  50
 
     # Buffered uplink for motion control
     if direction_buffer != [0, 0, 0, 0]:
@@ -153,6 +153,7 @@ while not EXIT:
 ## ⚙️ Telemetry Keys  
 
 The following telemetry values are supported via `get_telem()`:  
+See DJI Protocol Documentation: 
 
 ```
 mid, x, y, z, pitch, roll, yaw, 
