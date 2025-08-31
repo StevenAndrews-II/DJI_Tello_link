@@ -42,21 +42,21 @@ from TelloLink import TelloLink
 import time
 import keyboard
 
-TL = TelloLink()  # Initialize link
+TL                   = TelloLink()  # Initialize link
 
-EXIT = False
-FPS_LOCK = 60
-FPS_INTERVAL = 1 / FPS_LOCK
-delta_time = 0
-last_tick = time.time()
+EXIT                 = False
+FPS_LOCK             = 60
+FPS_INTERVAL         = 1 / FPS_LOCK
+delta_time           = 0
+last_tick            = time.time()
 
 # keyboard control
-direction_buffer = [0, 0, 0, 0]
+direction_buffer     = [0, 0, 0, 0]
 
 # flight state tracking
-in_air = False
-dead_stick = True
-dead_stick_padding = 2
+in_air               = False
+dead_stick           = True
+dead_stick_padding   = 2
 
 # keys
 w_down = s_down = a_down = d_down = False
@@ -116,9 +116,9 @@ def APP():
 
 # main loop, fps locked to 60
 while not EXIT:
-    tick = time.time()
-    delta = tick - last_tick
-    last_tick = tick
+    tick         = time.time()
+    delta        = tick - last_tick
+    last_tick    = tick
 
     delta_time += delta
 
