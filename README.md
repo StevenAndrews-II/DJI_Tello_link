@@ -42,110 +42,91 @@ from TelloLink import TelloLink
 import time
 import keyboard
 
-TL                       = TelloLink()       # Initialize link
+TL = TelloLink()  # Initialize link
 
-# FPS clock
-
-EXIT                     = False
-FPS_LOCK                 = 60
-FPS_INTERVAL             = 1 / FPS_LOCK
-delta_time               = 0
-last_tick                = time.time()
+EXIT = False
+FPS_LOCK = 60
+FPS_INTERVAL = 1 / FPS_LOCK
+delta_time = 0
+last_tick = time.time()
 
 # keyboard control
-t_toggle                 = False
-direction_buffer         = [0,0,0,0]
+direction_buffer = [0, 0, 0, 0]
 
-# flight state tracking:
-in_air                   = False
-dead_stick               = True    # stick return to center, reduce link overhead 
-dead_stick_padding       = 2
+# flight state tracking
+in_air = False
+dead_stick = True
+dead_stick_padding = 2
 
 # keys
-w_down = False
-s_down = False
-a_down = False
-d_down = False
+w_down = s_down = a_down = d_down = False
 
-# conection tracking
+# connection tracking
 last_connection_state = False
 
 def APP():
-    # display connection state
-    if last_connection_state != TL.connection_data.connection_state:
-        print(f"Drone connection state: {TL.connection_data.connection_state}")
-        last_connection_state = TL.connection_data.connection_state
+    global last_connection_state, w_down, s_down, a_down, d_down, dead_stick
 
-    # single action commands 
+    # display connection state
+    if last_connection_state != TL.connection_data["connection_state"]:
+        print(f"Drone connection state: {TL.connection_data['connection_state']}")
+        last_connection_state = TL.connection_data["connection_state"]
+
+    # single action commands
     if keyboard.is_pressed("t"):
-       print("sending take off command")
-       TL.uplink("takeoff")        # see drone documentation for commands 
+        print("sending take off command")
+        TL.uplink("takeoff")
 
     if keyboard.is_pressed("l"):
-       print("sending land command")
-       TL.uplink("land")
+        print("sending land command")
+        TL.uplink("land")
 
-    # keyboard motion interface 
-    if keyboard.is_pressed("w"):
-       w_down     = True
-       dead_stick = False
-    else:
-       w_down     = False
-    if keyboard.is_pressed("s"):
-       s_down     = True
-       dead_stick = False
-    else:
-       s_down     = False
-    if keyboard.is_pressed("a"):    
-       a_down     = True
-       dead_stick = False
-    else:
-       a_down     = False
-    if keyboard.is_pressed("d"):
-       d_down     = True
-       dead_stick = False
-    else:
-       d_down     = False
+    # keyboard motion interface
+    w_down = keyboard.is_pressed("w")
+    s_down = keyboard.is_pressed("s")
+    a_down = keyboard.is_pressed("a")
+    d_down = keyboard.is_pressed("d")
+    dead_stick = not (w_down or s_down or a_down or d_down)
 
-    # reset buffer to 0 when no buttons are down 
+    # reset buffer to 0 when no buttons are down
     if not w_down and not s_down:
         direction_buffer[0] = 0
     if not a_down and not d_down:
         direction_buffer[1] = 0
 
     # apply motion
-    if w_down = True:
-       direction_buffer[0] =  50
-    if s_down = True:
-       direction_buffer[0] = -50
-    if a_down = True:
-       direction_buffer[1] = -50
-    if d_down = True:
-       direction_buffer[1] =  50
+    if w_down:
+        direction_buffer[0] = 50
+    if s_down:
+        direction_buffer[0] = -50
+    if a_down:
+        direction_buffer[1] = -50
+    if d_down:
+        direction_buffer[1] = 50
 
-    # Buffered uplink for motion control  
-    if direction_buffer != [0,0,0,0] :
-       if not dead_stick:
-           TL.uplink(direction_buffer)
+    # Buffered uplink for motion control
+    if direction_buffer != [0, 0, 0, 0]:
+        if not dead_stick:
+            TL.uplink(direction_buffer)
     else:
-       if not dead_stick:
-           for i in range(dead_stick_padding)
+        if not dead_stick:
+            for _ in range(dead_stick_padding):
                 TL.uplink(direction_buffer)
-           dead_stick = True
-       
+            dead_stick = True
 
-while not EXIT: # main loop, fps locked to 60 
-     tick                =  time.time()        # get time 
-     delta               =  tick - last_tick   # get delta 
-     last_tick           =  tick               # update last tick 
+# main loop, fps locked to 60
+while not EXIT:
+    tick = time.time()
+    delta = tick - last_tick
+    last_tick = tick
 
-     deta_time           += delta              # update delta time 
+    delta_time += delta
 
-    if delta_time >= FPS_INTERVAL:             
-       TL.connection()                         # keeps the drone in SDK mode & tracks connection state
-       APP()
-       delta_time        -= FPS_INTERVAL
-     
+    if delta_time >= FPS_INTERVAL:
+        TL.connection()
+        APP()
+        delta_time -= FPS_INTERVAL
+
 
 ```
 
