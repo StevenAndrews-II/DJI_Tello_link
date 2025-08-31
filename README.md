@@ -85,7 +85,6 @@ def APP():
     s_down = keyboard.is_pressed("s")
     a_down = keyboard.is_pressed("a")
     d_down = keyboard.is_pressed("d")
-    dead_stick = not (w_down or s_down or a_down or d_down)
 
     # reset buffer to 0 when no buttons are down
     if not w_down and not s_down:
@@ -103,10 +102,10 @@ def APP():
     if d_down:
         direction_buffer[1] =  50
 
-    # Buffered uplink for motion control
+    # Buffered uplink for motion control - dead stick handling 
     if direction_buffer != [0, 0, 0, 0]:
-        if not dead_stick:
-            TL.uplink(direction_buffer)
+       TL.uplink(direction_buffer)
+       dead_stick = False
     else:
         if not dead_stick:
             for _ in range(dead_stick_padding):
