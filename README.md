@@ -37,11 +37,11 @@ cd DJI_Tello_link
 
 ## 📖 Usage Example  
 
-# Example script: 
-# auto stabilization - dead sticks 
-# dynamic command buffer
-# keys as sticks 
-# button binds 
+- Example script: 
+- auto stabilization - dead sticks 
+- dynamic command buffer
+- keys as sticks 
+- button binds 
 
 ```python
 from TelloLink import TelloLink
