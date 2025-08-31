@@ -37,6 +37,12 @@ cd DJI_Tello_link
 
 ## 📖 Usage Example  
 
+# Example script: 
+# auto stabilization - dead sticks 
+# dynamic command buffer
+# keys as sticks 
+# button binds 
+
 ```python
 from TelloLink import TelloLink
 import time
@@ -63,7 +69,7 @@ w_down = s_down = a_down = d_down = False
 # connection tracking
 last_connection_state = False
 
-def APP():
+def APP(): 
     global last_connection_state, w_down, s_down, a_down, d_down, dead_stick
 
     # display connection state
