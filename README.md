@@ -115,7 +115,8 @@ def APP():
     else:
         if not dead_stick:
             for _ in range(dead_stick_padding):
-                TL.uplink(direction_buffer)
+                TL.uplink([0,0,0,0])
+            print("Dead sticks detected - auto stabilization")
             dead_stick = True
 
 # main loop, fps locked to 60
